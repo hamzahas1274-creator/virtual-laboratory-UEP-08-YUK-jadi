@@ -1,0 +1,1176 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Virtual Lab & Game Kuis IPA SMP Kelas 8</title>
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --primary: #4f46e5;
+      --primary-hover: #4338ca;
+      --primary-light: #e0e7ff;
+      --success: #10b981;
+      --success-light: #d1fae5;
+      --danger: #ef4444;
+      --danger-light: #fee2e2;
+      --warning: #f59e0b;
+      --warning-light: #fef3c7;
+      --bg: #f3f4f6;
+      --surface: #ffffff;
+      --text: #1f2937;
+      --text-muted: #6b7280;
+      --radius: 16px;
+      --transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    }
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+      font-family: 'Plus Jakarta Sans', sans-serif;
+    }
+
+    body {
+      background-color: var(--bg);
+      color: var(--text);
+      min-height: 100vh;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+    }
+
+    /* Container Frame */
+    .app-frame {
+      width: 100%;
+      max-width: 1150px;
+      height: 94vh;
+      background: var(--surface);
+      border-radius: 24px;
+      box-shadow: 0 20px 25px -5px rgba(0,0,0,0.1);
+      display: flex;
+      flex-direction: column;
+      overflow: hidden;
+      border: 1px solid #e5e7eb;
+    }
+
+    /* Top App Bar */
+    header {
+      background: var(--surface);
+      padding: 1rem 1.5rem;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      border-bottom: 1px solid #f3f4f6;
+    }
+
+    .app-title {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+
+    .app-title .icon {
+      width: 36px;
+      height: 36px;
+      background: var(--primary-light);
+      color: var(--primary);
+      border-radius: 10px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 1.2rem;
+    }
+
+    .app-title h1 {
+      font-size: 1.1rem;
+      font-weight: 700;
+    }
+
+    /* Layout Body */
+    .app-body {
+      display: flex;
+      flex: 1;
+      overflow: hidden;
+    }
+
+    /* Sidebar Navigation */
+    nav.side-nav {
+      width: 250px;
+      background: var(--surface);
+      padding: 1.25rem;
+      display: flex;
+      flex-direction: column;
+      gap: 0.5rem;
+      border-right: 1px solid #f3f4f6;
+    }
+
+    .nav-btn {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      width: 100%;
+      padding: 0.85rem 1rem;
+      border: none;
+      background: transparent;
+      color: var(--text-muted);
+      font-size: 0.9rem;
+      font-weight: 600;
+      border-radius: 12px;
+      cursor: pointer;
+      transition: var(--transition);
+      outline: none;
+      text-align: left;
+    }
+
+    .nav-btn:hover {
+      background: #f8fafc;
+      color: var(--primary);
+      transform: translateX(4px);
+    }
+
+    .nav-btn.active {
+      background: var(--primary);
+      color: white;
+      box-shadow: 0 4px 12px rgba(79, 70, 229, 0.3);
+    }
+
+    /* Main Content Area */
+    main.content-area {
+      flex: 1;
+      padding: 1.5rem;
+      overflow-y: auto;
+      background: #fafafa;
+    }
+
+    .view-section {
+      display: none;
+      opacity: 0;
+      transform: translateY(10px);
+      transition: opacity 0.4s ease, transform 0.4s ease;
+    }
+
+    .view-section.active {
+      display: block;
+      opacity: 1;
+      transform: translateY(0);
+    }
+
+    /* Cards */
+    .card-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+      gap: 1.25rem;
+      margin-top: 1rem;
+    }
+
+    .ui-card {
+      background: var(--surface);
+      padding: 1.5rem;
+      border-radius: var(--radius);
+      border: 1px solid #f3f4f6;
+      box-shadow: 0 4px 6px -1px rgba(0,0,0,0.02);
+      transition: var(--transition);
+    }
+
+    .ui-card:hover {
+      transform: translateY(-4px);
+      box-shadow: 0 10px 15px -3px rgba(0,0,0,0.08);
+    }
+
+    .btn-primary {
+      background: var(--primary);
+      color: white;
+      border: none;
+      padding: 0.75rem 1.25rem;
+      border-radius: 10px;
+      font-weight: 600;
+      cursor: pointer;
+      transition: var(--transition);
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .btn-primary:hover {
+      background: var(--primary-hover);
+      transform: scale(1.02);
+      box-shadow: 0 4px 12px rgba(79, 70, 229, 0.3);
+    }
+
+    /* Lab Interactive Layout */
+    .lab-layout {
+      display: grid;
+      grid-template-columns: 320px 1fr;
+      gap: 1.25rem;
+      height: 100%;
+    }
+
+    .control-panel {
+      background: var(--surface);
+      padding: 1.25rem;
+      border-radius: var(--radius);
+      border: 1px solid #f3f4f6;
+      display: flex;
+      flex-direction: column;
+      gap: 1rem;
+    }
+
+    .tab-pills {
+      display: flex;
+      background: #f1f5f9;
+      padding: 4px;
+      border-radius: 10px;
+      gap: 4px;
+    }
+
+    .tab-pill {
+      flex: 1;
+      padding: 0.5rem;
+      border: none;
+      background: transparent;
+      font-size: 0.85rem;
+      font-weight: 600;
+      color: var(--text-muted);
+      border-radius: 8px;
+      cursor: pointer;
+      transition: var(--transition);
+    }
+
+    .tab-pill.active {
+      background: var(--surface);
+      color: var(--primary);
+      box-shadow: 0 2px 4px rgba(0,0,0,0.05);
+    }
+
+    .slider-group {
+      display: flex;
+      flex-direction: column;
+      gap: 0.4rem;
+    }
+
+    .slider-group label {
+      font-size: 0.85rem;
+      font-weight: 600;
+      display: flex;
+      justify-content: space-between;
+    }
+
+    input[type="range"] {
+      accent-color: var(--primary);
+      cursor: pointer;
+    }
+
+    .metric-badge {
+      background: var(--primary-light);
+      padding: 1rem;
+      border-radius: 12px;
+      color: var(--primary-hover);
+    }
+
+    .metric-badge strong {
+      display: block;
+      font-size: 1.2rem;
+      color: var(--primary);
+    }
+
+    .canvas-card {
+      background: var(--surface);
+      border-radius: var(--radius);
+      border: 1px solid #f3f4f6;
+      padding: 1rem;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+    }
+
+    canvas {
+      width: 100%;
+      height: 100%;
+      max-height: 420px;
+      background: #f8fafc;
+      border-radius: 12px;
+    }
+
+    /* MATERI STYLES */
+    .materi-card {
+      background: var(--surface);
+      border-radius: var(--radius);
+      padding: 1.5rem;
+      margin-bottom: 1.25rem;
+      border: 1px solid #e5e7eb;
+    }
+
+    .materi-card h3 {
+      color: var(--primary);
+      margin-bottom: 0.75rem;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .formula-box {
+      background: #f1f5f9;
+      padding: 0.85rem 1.25rem;
+      border-radius: 10px;
+      font-family: monospace;
+      font-weight: 700;
+      font-size: 1rem;
+      color: #334155;
+      margin: 0.75rem 0;
+      display: inline-block;
+    }
+
+    /* GAME QUIZ STYLES */
+    .game-container {
+      max-width: 680px;
+      margin: 0 auto;
+      background: var(--surface);
+      padding: 1.75rem;
+      border-radius: 20px;
+      border: 1px solid #e5e7eb;
+      box-shadow: 0 10px 15px -3px rgba(0,0,0,0.05);
+    }
+
+    .game-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 1rem;
+    }
+
+    .progress-bar-bg {
+      width: 100%;
+      height: 10px;
+      background: #e5e7eb;
+      border-radius: 20px;
+      overflow: hidden;
+      margin-bottom: 1.5rem;
+    }
+
+    .progress-bar-fill {
+      height: 100%;
+      background: var(--primary);
+      width: 0%;
+      transition: width 0.3s ease;
+    }
+
+    .question-box {
+      font-size: 1.1rem;
+      font-weight: 700;
+      color: var(--text);
+      margin-bottom: 1.25rem;
+      line-height: 1.5;
+    }
+
+    .options-grid {
+      display: grid;
+      grid-template-columns: 1fr;
+      gap: 0.75rem;
+    }
+
+    .option-btn {
+      background: #f9fafb;
+      border: 2px solid #e5e7eb;
+      padding: 0.9rem 1.25rem;
+      border-radius: 12px;
+      font-weight: 600;
+      text-align: left;
+      cursor: pointer;
+      transition: var(--transition);
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+    }
+
+    .option-btn:hover {
+      border-color: var(--primary);
+      background: var(--primary-light);
+    }
+
+    .option-btn.correct {
+      background: var(--success-light) !important;
+      border-color: var(--success) !important;
+      color: #065f46;
+    }
+
+    .option-btn.wrong {
+      background: var(--danger-light) !important;
+      border-color: var(--danger) !important;
+      color: #991b1b;
+    }
+
+    .explanation-box {
+      margin-top: 1rem;
+      padding: 1rem;
+      background: #f0f9ff;
+      border-left: 4px solid var(--primary);
+      border-radius: 8px;
+      font-size: 0.9rem;
+      display: none;
+    }
+
+    .game-footer {
+      margin-top: 1.5rem;
+      display: flex;
+      justify-content: flex-end;
+    }
+
+    .score-badge {
+      background: var(--warning-light);
+      color: #d97706;
+      padding: 0.4rem 0.8rem;
+      border-radius: 20px;
+      font-weight: 700;
+      font-size: 0.85rem;
+    }
+
+    .result-screen {
+      text-align: center;
+      padding: 2rem 1rem;
+    }
+
+    .result-screen h3 {
+      font-size: 1.75rem;
+      margin-bottom: 0.5rem;
+    }
+
+    @media (max-width: 768px) {
+      .app-frame {
+        height: 100vh;
+        border-radius: 0;
+      }
+      .app-body {
+        flex-direction: column-reverse;
+      }
+      nav.side-nav {
+        width: 100%;
+        flex-direction: row;
+        border-right: none;
+        border-top: 1px solid #f3f4f6;
+        padding: 0.5rem;
+        overflow-x: auto;
+      }
+      .nav-btn {
+        flex-direction: column;
+        font-size: 0.7rem;
+        padding: 0.5rem;
+        gap: 4px;
+        white-space: nowrap;
+      }
+      .lab-layout {
+        grid-template-columns: 1fr;
+      }
+    }
+  </style>
+</head>
+<body>
+
+  <div class="app-frame">
+    <!-- Header -->
+    <header>
+      <div class="app-title">
+        <div class="icon">🧪</div>
+        <div>
+          <h1>Virtual Lab & Game IPA Kelas 8</h1>
+          <p style="font-size: 0.75rem; color: var(--text-muted);">Usaha, Energi, dan Pesawat Sederhana</p>
+        </div>
+      </div>
+    </header>
+
+    <div class="app-body">
+      <!-- Sidebar Menu -->
+      <nav class="side-nav">
+        <button class="nav-btn active" onclick="switchView('dashboard')">
+          <span>🏠</span> Beranda
+        </button>
+        <button class="nav-btn" onclick="switchView('materi')">
+          <span>📚</span> Materi Pembelajaran
+        </button>
+        <button class="nav-btn" onclick="switchView('lab-usaha')">
+          <span>🎯</span> Lab Usaha
+        </button>
+        <button class="nav-btn" onclick="switchView('lab-energi')">
+          <span>⚡</span> Lab Energi
+        </button>
+        <button class="nav-btn" onclick="switchView('lab-pesawat')">
+          <span>⚖️</span> Lab Pesawat Sederhana
+        </button>
+        <button class="nav-btn" onclick="switchView('game')">
+          <span>🎮</span> Game Kuis (30 Soal)
+        </button>
+      </nav>
+
+      <!-- Main Content Area -->
+      <main class="content-area">
+
+        <!-- DASHBOARD -->
+        <section id="view-dashboard" class="view-section active">
+          <h2>Selamat Datang di Virtual Lab Physics! 👋</h2>
+          <p style="color: var(--text-muted); margin-top: 4px;">Pilih materi, laboratorium virtual interaktif terpisah, atau tantang kemampuanmu dalam Game Kuis.</p>
+
+          <div class="card-grid">
+            <div class="ui-card">
+              <span style="font-size: 2rem;">📚</span>
+              <h3 style="margin-top: 0.5rem;">Materi Pembelajaran</h3>
+              <p style="font-size: 0.85rem; color: var(--text-muted); margin: 0.5rem 0 1rem 0;">Rangkuman konsep usaha, bentuk-bentuk energi, dan jenis pesawat sederhana.</p>
+              <button class="btn-primary" onclick="switchView('materi')">Baca Materi →</button>
+            </div>
+
+            <div class="ui-card">
+              <span style="font-size: 2rem;">🎯</span>
+              <h3 style="margin-top: 0.5rem;">Virtual Lab Usaha</h3>
+              <p style="font-size: 0.85rem; color: var(--text-muted); margin: 0.5rem 0 1rem 0;">Simulasi dorongan gaya pada benda dan perhitungan usaha ($W = F \cdot s$).</p>
+              <button class="btn-primary" onclick="switchView('lab-usaha')">Buka Lab →</button>
+            </div>
+
+            <div class="ui-card">
+              <span style="font-size: 2rem;">⚡</span>
+              <h3 style="margin-top: 0.5rem;">Virtual Lab Energi</h3>
+              <p style="font-size: 0.85rem; color: var(--text-muted); margin: 0.5rem 0 1rem 0;">Simulasi grafik interaktif Energi Potensial, Kinetik, dan Energi Mekanik.</p>
+              <button class="btn-primary" onclick="switchView('lab-energi')">Buka Lab →</button>
+            </div>
+
+            <div class="ui-card">
+              <span style="font-size: 2rem;">⚖️</span>
+              <h3 style="margin-top: 0.5rem;">Lab Pesawat Sederhana</h3>
+              <p style="font-size: 0.85rem; color: var(--text-muted); margin: 0.5rem 0 1rem 0;">Praktikum interaktif untuk Tuas/Pengungkit dan Bidang Miring.</p>
+              <button class="btn-primary" onclick="switchView('lab-pesawat')">Buka Lab →</button>
+            </div>
+
+            <div class="ui-card">
+              <span style="font-size: 2rem;">🏆</span>
+              <h3 style="margin-top: 0.5rem;">Game Kuis (30 Soal)</h3>
+              <p style="font-size: 0.85rem; color: var(--text-muted); margin: 0.5rem 0 1rem 0;">Latihan soal interaktif lengkap dengan pembahasan instan.</p>
+              <button class="btn-primary" style="background: #10b981;" onclick="switchView('game')">Mainkan Kuis →</button>
+            </div>
+          </div>
+        </section>
+
+        <!-- MATERI PEMBELAJARAN -->
+        <section id="view-materi" class="view-section">
+          <h2 style="margin-bottom: 1rem;">📚 Rangkuman Materi IPA Kelas 8</h2>
+
+          <div class="materi-card">
+            <h3>1. Usaha (Work)</h3>
+            <p>Usaha didefinisikan sebagai hasil kali antara gaya yang bekerja pada benda dengan perpindahan benda yang searah dengan gaya tersebut.</p>
+            <div class="formula-box">W = F × s</div>
+            <p style="font-size: 0.85rem; color: var(--text-muted);">
+              • <strong>W</strong> = Usaha (Joule/J)<br>
+              • <strong>F</strong> = Gaya (Newton/N)<br>
+              • <strong>s</strong> = Perpindahan (Meter/m)<br>
+              <em>Catatan: Jika benda tidak berpindah ($s=0$) atau gaya tegak lurus perpindahan, maka Usaha bernilai Nol.</em>
+            </p>
+          </div>
+
+          <div class="materi-card">
+            <h3>2. Energi & Hukum Kekekalan Energi</h3>
+            <p>Energi adalah kemampuan untuk melakukan usaha. Energi tidak dapat diciptakan atau dimusnahkan, hanya dapat berubah bentuk.</p>
+            
+            <p style="margin-top:0.5rem;"><strong>a. Energi Potensial Gravitasi ($E_p$):</strong> Energi karena ketinggian benda.</p>
+            <div class="formula-box">Ep = m × g × h</div>
+
+            <p style="margin-top:0.5rem;"><strong>b. Energi Kinetik ($E_k$):</strong> Energi yang dimiliki benda yang bergerak.</p>
+            <div class="formula-box">Ek = ½ × m × v²</div>
+
+            <p style="margin-top:0.5rem;"><strong>c. Energi Mekanik ($E_m$):</strong> Total energi potensial dan kinetik.</p>
+            <div class="formula-box">Em = Ep + Ek = Konstan</div>
+          </div>
+
+          <div class="materi-card">
+            <h3>3. Pesawat Sederhana</h3>
+            <p>Alat untuk mempermudah melakukan usaha dengan cara mengubah gaya atau arah gaya.</p>
+            
+            <p style="margin-top:0.75rem;"><strong>a. Tuas / Pengungkit:</strong></p>
+            <div class="formula-box">w × lb = F × lk  ➔  KM = w / F = lk / lb</div>
+            <p style="font-size: 0.85rem; color: var(--text-muted);">
+              • Jenis 1: Titik Tumpu di tengah (Gunting, Tang)<br>
+              • Jenis 2: Titik Beban di tengah (Gerobak dorong, Pembuka botol)<br>
+              • Jenis 3: Titik Kuasa di tengah (Sapu, Pinset)
+            </p>
+
+            <p style="margin-top:0.75rem;"><strong>b. Bidang Miring:</strong></p>
+            <div class="formula-box">w × h = F × s  ➔  KM = s / h</div>
+
+            <p style="margin-top:0.75rem;"><strong>c. Katrol:</strong></p>
+            <p style="font-size: 0.85rem; color: var(--text-muted);">
+              • Katrol Tetap: $KM = 1$<br>
+              • Katrol Bebas: $KM = 2$<br>
+              • Katrol Majemuk: $KM$ = Jumlah tali penopang beban
+            </p>
+          </div>
+        </section>
+
+        <!-- LAB 1: USAHA -->
+        <section id="view-lab-usaha" class="view-section">
+          <h2 style="margin-bottom: 1rem;">🎯 Virtual Lab: Usaha</h2>
+          <div class="lab-layout">
+            <div class="control-panel">
+              <div class="slider-group">
+                <label>Gaya (F): <span id="val-u-f">50 N</span></label>
+                <input type="range" id="u-f" min="0" max="200" value="50" step="5">
+              </div>
+              <div class="slider-group">
+                <label>Perpindahan (s): <span id="val-u-s">4 m</span></label>
+                <input type="range" id="u-s" min="0" max="10" value="4" step="0.5">
+              </div>
+
+              <div class="metric-badge" style="margin-top: 1rem;">
+                <small>Usaha yang Dihasilkan (W):</small>
+                <strong id="res-u-w">200 Joule</strong>
+              </div>
+            </div>
+            <div class="canvas-card">
+              <canvas id="canvasUsaha" width="600" height="350"></canvas>
+            </div>
+          </div>
+        </section>
+
+        <!-- LAB 2: ENERGI -->
+        <section id="view-lab-energi" class="view-section">
+          <h2 style="margin-bottom: 1rem;">⚡ Virtual Lab: Energi Mekanik</h2>
+          <div class="lab-layout">
+            <div class="control-panel">
+              <div class="slider-group">
+                <label>Massa Benda (m): <span id="val-e-m">2 kg</span></label>
+                <input type="range" id="e-m" min="1" max="10" value="2" step="1">
+              </div>
+              <div class="slider-group">
+                <label>Ketinggian (h): <span id="val-e-h">5 m</span></label>
+                <input type="range" id="e-h" min="1" max="10" value="5" step="0.5">
+              </div>
+
+              <div class="metric-badge" style="margin-top: 0.5rem;">
+                <small>Energi Potensial (Ep):</small>
+                <strong id="res-e-ep" style="color:#3b82f6;">100 Joule</strong>
+                <small style="margin-top:8px; display:block;">Energi Kinetik (Ek):</small>
+                <strong id="res-e-ek" style="color:#10b981;">0 Joule</strong>
+                <small style="margin-top:8px; display:block;">Total Energi Mekanik (Em):</small>
+                <strong id="res-e-em" style="color:#4f46e5;">100 Joule</strong>
+              </div>
+            </div>
+            <div class="canvas-card">
+              <canvas id="canvasEnergi" width="600" height="350"></canvas>
+            </div>
+          </div>
+        </section>
+
+        <!-- LAB 3: PESAWAT SEDERHANA -->
+        <section id="view-lab-pesawat" class="view-section">
+          <h2 style="margin-bottom: 1rem;">⚖️ Virtual Lab: Pesawat Sederhana</h2>
+          <div class="lab-layout">
+            <div class="control-panel">
+              <div class="tab-pills">
+                <button class="tab-pill active" id="tab-tuas" onclick="setPesawatModule('tuas')">Tuas</button>
+                <button class="tab-pill" id="tab-ramp" onclick="setPesawatModule('ramp')">Bidang Miring</button>
+              </div>
+
+              <!-- Form Tuas -->
+              <div id="form-tuas">
+                <div class="slider-group">
+                  <label>Beban (w): <span id="val-tuas-w">100 N</span></label>
+                  <input type="range" id="tuas-w" min="20" max="300" value="100" step="10">
+                </div>
+                <div class="slider-group" style="margin-top: 0.8rem;">
+                  <label>Lengan Beban (lb): <span id="val-tuas-lb">1.0 m</span></label>
+                  <input type="range" id="tuas-lb" min="0.2" max="2.5" value="1.0" step="0.1">
+                </div>
+                <div class="slider-group" style="margin-top: 0.8rem;">
+                  <label>Lengan Kuasa (lk): <span id="val-tuas-lk">2.0 m</span></label>
+                  <input type="range" id="tuas-lk" min="0.2" max="2.5" value="2.0" step="0.1">
+                </div>
+
+                <div class="metric-badge" style="margin-top: 1rem;">
+                  <small>Gaya Kuasa (F):</small>
+                  <strong id="res-tuas-f">50.0 N</strong>
+                  <small style="margin-top: 4px; display:block;">Keuntungan Mekanis (KM): <span id="res-tuas-km">2.0</span></small>
+                </div>
+              </div>
+
+              <!-- Form Bidang Miring -->
+              <div id="form-ramp" style="display: none;">
+                <div class="slider-group">
+                  <label>Beban (w): <span id="val-mass">100 N</span></label>
+                  <input type="range" id="mass" min="20" max="200" value="100" step="10">
+                </div>
+                <div class="slider-group" style="margin-top: 0.8rem;">
+                  <label>Tinggi (h): <span id="val-height">2.0 m</span></label>
+                  <input type="range" id="height" min="1" max="4" value="2" step="0.5">
+                </div>
+                <div class="slider-group" style="margin-top: 0.8rem;">
+                  <label>Panjang (s): <span id="val-length">5.0 m</span></label>
+                  <input type="range" id="length" min="3" max="8" value="5" step="0.5">
+                </div>
+
+                <div class="metric-badge" style="margin-top: 1rem;">
+                  <small>Gaya Kuasa (F):</small>
+                  <strong id="res-force">40.0 N</strong>
+                  <small style="margin-top: 4px; display:block;">Keuntungan Mekanis (KM): <span id="res-km">2.5</span></small>
+                </div>
+              </div>
+            </div>
+
+            <div class="canvas-card">
+              <canvas id="canvasPesawat" width="600" height="350"></canvas>
+            </div>
+          </div>
+        </section>
+
+        <!-- GAME KUIS -->
+        <section id="view-game" class="view-section">
+          <div class="game-container">
+            <div id="quiz-screen">
+              <div class="game-header">
+                <span style="font-size: 0.9rem; font-weight: 700; color: var(--text-muted);" id="q-number">Soal 1 dari 30</span>
+                <span class="score-badge">⭐ Skor: <span id="current-score">0</span></span>
+              </div>
+
+              <div class="progress-bar-bg">
+                <div class="progress-bar-fill" id="quiz-progress"></div>
+              </div>
+
+              <div class="question-box" id="question-text">
+                Pertanyaan akan dimuat...
+              </div>
+
+              <div class="options-grid" id="options-container"></div>
+
+              <div class="explanation-box" id="explanation-box">
+                <strong>Pembahasan:</strong> <span id="explanation-text"></span>
+              </div>
+
+              <div class="game-footer">
+                <button class="btn-primary" id="btn-next" style="display: none;" onclick="nextQuestion()">Soal Berikutnya →</button>
+              </div>
+            </div>
+
+            <!-- Result Screen -->
+            <div id="result-screen" class="result-screen" style="display: none;">
+              <span style="font-size: 3.5rem;">🎉</span>
+              <h3>Kuis Selesai!</h3>
+              <p style="color: var(--text-muted); margin-bottom: 1.5rem;">Berikut adalah hasil pencapaianmu:</p>
+              
+              <div style="background: #f8fafc; padding: 1.25rem; border-radius: 16px; margin-bottom: 1.5rem;">
+                <div style="font-size: 2.5rem; font-weight: 800; color: var(--primary);" id="final-score">0 / 300</div>
+                <span style="font-size: 0.9rem; color: var(--text-muted);" id="final-accuracy">Akurasi: 0%</span>
+              </div>
+
+              <button class="btn-primary" onclick="restartGame()">🔄 Main Lagi dari Soal 1</button>
+            </div>
+          </div>
+        </section>
+
+      </main>
+    </div>
+  </div>
+
+  <script>
+    // --- NAVIGASI VIEW Halaman ---
+    function switchView(viewId) {
+      document.querySelectorAll('.view-section').forEach(v => v.classList.remove('active'));
+      document.querySelectorAll('.nav-btn').forEach(b => b.classList.remove('active'));
+
+      const target = document.getElementById('view-' + viewId);
+      if(target) target.classList.add('active');
+
+      const navMap = {
+        'dashboard': 0, 'materi': 1, 'lab-usaha': 2, 'lab-energi': 3, 'lab-pesawat': 4, 'game': 5
+      };
+      if (navMap[viewId] !== undefined) {
+        document.querySelectorAll('.nav-btn')[navMap[viewId]].classList.add('active');
+      }
+
+      stopAllAnimations();
+
+      if (viewId === 'lab-usaha') startUsahaLoop();
+      else if (viewId === 'lab-energi') startEnergiLoop();
+      else if (viewId === 'lab-pesawat') startPesawatLoop();
+
+      if (viewId === 'game' && currentQuestionIndex === 0 && quizScore === 0) {
+        loadQuestion();
+      }
+    }
+
+    let activePesawatModule = 'tuas';
+    function setPesawatModule(modName) {
+      activePesawatModule = modName;
+      document.querySelectorAll('.tab-pill').forEach(t => t.classList.remove('active'));
+
+      if (modName === 'tuas') {
+        document.getElementById('tab-tuas').classList.add('active');
+        document.getElementById('form-tuas').style.display = 'block';
+        document.getElementById('form-ramp').style.display = 'none';
+      } else {
+        document.getElementById('tab-ramp').classList.add('active');
+        document.getElementById('form-tuas').style.display = 'none';
+        document.getElementById('form-ramp').style.display = 'block';
+      }
+    }
+
+    let animUsaha, animEnergi, animPesawat;
+    function stopAllAnimations() {
+      if (animUsaha) cancelAnimationFrame(animUsaha);
+      if (animEnergi) cancelAnimationFrame(animEnergi);
+      if (animPesawat) cancelAnimationFrame(animPesawat);
+    }
+
+    // --- LAB 1: USAHA ---
+    const cvsUsaha = document.getElementById('canvasUsaha');
+    const ctxU = cvsUsaha.getContext('2d');
+    let uBoxX = 50;
+
+    function startUsahaLoop() {
+      function loop() {
+        ctxU.clearRect(0, 0, cvsUsaha.width, cvsUsaha.height);
+        
+        const F = parseFloat(document.getElementById('u-f').value);
+        const s = parseFloat(document.getElementById('u-s').value);
+        const W = F * s;
+
+        document.getElementById('val-u-f').innerText = F + ' N';
+        document.getElementById('val-u-s').innerText = s + ' m';
+        document.getElementById('res-u-w').innerText = W + ' Joule';
+
+        // Ground
+        ctxU.fillStyle = '#cbd5e1';
+        ctxU.fillRect(0, 250, 600, 100);
+
+        // Box Animation
+        const targetX = 50 + (s * 45);
+        if (F > 0) {
+          uBoxX += (targetX - uBoxX) * 0.05;
+        } else {
+          uBoxX = 50;
+        }
+
+        // Draw Box
+        ctxU.fillStyle = '#4f46e5';
+        ctxU.fillRect(uBoxX, 190, 60, 60);
+
+        // Force Arrow
+        if (F > 0) {
+          ctxU.strokeStyle = '#ef4444';
+          ctxU.lineWidth = 4;
+          ctxU.beginPath();
+          ctxU.moveTo(uBoxX + 60, 220);
+          ctxU.lineTo(uBoxX + 60 + Math.min(F, 100), 220);
+          ctxU.stroke();
+          ctxU.fillStyle = '#ef4444';
+          ctxU.fillText('F = ' + F + 'N', uBoxX + 65, 210);
+        }
+
+        // Distance Mark
+        ctxU.strokeStyle = '#64748b';
+        ctxU.setLineDash([5, 5]);
+        ctxU.beginPath();
+        ctxU.moveTo(50, 265);
+        ctxU.lineTo(targetX, 265);
+        ctxU.stroke();
+        ctxU.setLineDash([]);
+        ctxU.fillStyle = '#334155';
+        ctx.font = '12px sans-serif';
+        ctxU.fillText('s = ' + s + ' m', 50 + (s * 20), 285);
+
+        animUsaha = requestAnimationFrame(loop);
+      }
+      loop();
+    }
+
+    // --- LAB 2: ENERGI ---
+    const cvsEnergi = document.getElementById('canvasEnergi');
+    const ctxE = cvsEnergi.getContext('2d');
+    let eTime = 0;
+
+    function startEnergiLoop() {
+      function loop() {
+        ctxE.clearRect(0, 0, cvsEnergi.width, cvsEnergi.height);
+
+        const m = parseFloat(document.getElementById('e-m').value);
+        const h = parseFloat(document.getElementById('e-h').value);
+        const g = 10;
+
+        const EpMax = m * g * h;
+        eTime += 0.03;
+        const currentH = (Math.sin(eTime) + 1) / 2 * h; // Oscillation height
+
+        const Ep = m * g * currentH;
+        const Ek = EpMax - Ep;
+
+        document.getElementById('val-e-m').innerText = m + ' kg';
+        document.getElementById('val-e-h').innerText = h + ' m';
+        document.getElementById('res-e-ep').innerText = Math.round(Ep) + ' Joule';
+        document.getElementById('res-e-ek').innerText = Math.round(Ek) + ' Joule';
+        document.getElementById('res-e-em').innerText = Math.round(EpMax) + ' Joule';
+
+        // Ball animation
+        const ballY = 260 - (currentH * 20);
+        ctxE.fillStyle = '#f59e0b';
+        ctxE.beginPath();
+        ctxE.arc(150, ballY, 15 + m, 0, Math.PI * 2);
+        ctxE.fill();
+
+        // Floor
+        ctxE.fillStyle = '#cbd5e1';
+        ctxE.fillRect(50, 275, 200, 10);
+
+        // Energy Bar Chart Visualization
+        const barX = 350;
+        const maxBarHeight = 180;
+
+        // Ep Bar
+        const epHeight = (Ep / EpMax) * maxBarHeight;
+        ctxE.fillStyle = '#3b82f6';
+        ctxE.fillRect(barX, 260 - epHeight, 40, epHeight);
+        ctxE.fillStyle = '#1e293b';
+        ctxE.fillText('Ep', barX + 10, 280);
+
+        // Ek Bar
+        const ekHeight = (Ek / EpMax) * maxBarHeight;
+        ctxE.fillStyle = '#10b981';
+        ctxE.fillRect(barX + 60, 260 - ekHeight, 40, ekHeight);
+        ctxE.fillStyle = '#1e293b';
+        ctxE.fillText('Ek', barX + 70, 280);
+
+        // Em Bar
+        ctxE.fillStyle = '#4f46e5';
+        ctxE.fillRect(barX + 120, 260 - maxBarHeight, 40, maxBarHeight);
+        ctxE.fillStyle = '#1e293b';
+        ctxE.fillText('Em', barX + 130, 280);
+
+        animEnergi = requestAnimationFrame(loop);
+      }
+      loop();
+    }
+
+    // --- LAB 3: PESAWAT SEDERHANA ---
+    const cvsPesawat = document.getElementById('canvasPesawat');
+    const ctxP = cvsPesawat.getContext('2d');
+    let rampBoxPos = 0;
+
+    function startPesawatLoop() {
+      function loop() {
+        ctxP.clearRect(0, 0, cvsPesawat.width, cvsPesawat.height);
+
+        if (activePesawatModule === 'tuas') {
+          const w = parseFloat(document.getElementById('tuas-w').value);
+          const lb = parseFloat(document.getElementById('tuas-lb').value);
+          const lk = parseFloat(document.getElementById('tuas-lk').value);
+
+          const F = (w * lb) / lk;
+          const KM = lk / lb;
+
+          document.getElementById('val-tuas-w').innerText = w + ' N';
+          document.getElementById('val-tuas-lb').innerText = lb.toFixed(1) + ' m';
+          document.getElementById('val-tuas-lk').innerText = lk.toFixed(1) + ' m';
+          document.getElementById('res-tuas-f').innerText = F.toFixed(1) + ' N';
+          document.getElementById('res-tuas-km').innerText = KM.toFixed(2);
+
+          const pivotX = 300, pivotY = 220, scale = 80;
+
+          // Pivot
+          ctxP.beginPath();
+          ctxP.moveTo(pivotX, pivotY);
+          ctxP.lineTo(pivotX - 18, pivotY + 36);
+          ctxP.lineTo(pivotX + 18, pivotY + 36);
+          ctxP.closePath();
+          ctxP.fillStyle = '#ef4444';
+          ctxP.fill();
+
+          // Lever Beam
+          const leftX = pivotX - (lb * scale);
+          const rightX = pivotX + (lk * scale);
+          ctxP.fillStyle = '#4f46e5';
+          ctxP.fillRect(leftX, pivotY - 4, rightX - leftX, 8);
+
+          // Weight Box
+          ctxP.fillStyle = '#3b82f6';
+          ctxP.fillRect(leftX - 16, pivotY - 36, 32, 32);
+          ctxP.fillStyle = '#ffffff';
+          ctxP.font = 'bold 10px sans-serif';
+          ctxP.fillText(w + 'N', leftX - 10, pivotY - 16);
+
+          // Force Arrow
+          ctxP.strokeStyle = '#10b981';
+          ctxP.lineWidth = 3;
+          ctxP.beginPath();
+          ctxP.moveTo(rightX, pivotY + 4);
+          ctxP.lineTo(rightX, pivotY + 40);
+          ctxP.stroke();
+
+        } else {
+          const w = parseFloat(document.getElementById('mass').value);
+          const h = parseFloat(document.getElementById('height').value);
+          const s = Math.max(parseFloat(document.getElementById('length').value), h + 0.5);
+
+          const F = (w * h) / s;
+          const KM = s / h;
+
+          document.getElementById('val-mass').innerText = w + ' N';
+          document.getElementById('val-height').innerText = h.toFixed(1) + ' m';
+          document.getElementById('val-length').innerText = s.toFixed(1) + ' m';
+          document.getElementById('res-force').innerText = F.toFixed(1) + ' N';
+          document.getElementById('res-km').innerText = KM.toFixed(2);
+
+          rampBoxPos += 0.005;
+          if (rampBoxPos > 0.8) rampBoxPos = 0.2;
+
+          const startX = 100, startY = 280, scale = 35;
+          const rampWidth = Math.sqrt(s*s - h*h) * scale;
+          const rampHeight = h * scale;
+
+          ctxP.beginPath();
+          ctxP.moveTo(startX, startY);
+          ctxP.lineTo(startX + rampWidth, startY);
+          ctxP.lineTo(startX + rampWidth, startY - rampHeight);
+          ctxP.closePath();
+          ctxP.fillStyle = '#e2e8f0';
+          ctxP.fill();
+          ctxP.strokeStyle = '#94a3b8';
+          ctxP.stroke();
+
+          const currentX = startX + rampWidth * rampBoxPos - 15;
+          const currentY = startY - rampHeight * rampBoxPos - 15;
+
+          ctxP.fillStyle = '#4f46e5';
+          ctxP.fillRect(currentX, currentY, 30, 30);
+          ctxP.fillStyle = '#ffffff';
+          ctxP.font = 'bold 10px sans-serif';
+          ctxP.fillText(w + 'N', currentX + 4, currentY + 18);
+        }
+
+        animPesawat = requestAnimationFrame(loop);
+      }
+      loop();
+    }
+
+    // --- BANK SOAL LENGKAP 30 NOMOR ---
+    const quizData = [
+      { question: "1. Dalam fisika, usaha dikatakan bernilai nol jika...", options: ["Gaya yang bekerja sangat besar", "Benda berpindah searah dengan gaya", "Gaya tegak lurus dengan arah perpindahan", "Perpindahan benda sangat jauh"], correct: 2, explanation: "Usaha bernilai nol jika gaya bekerja tegak lurus dengan arah perpindahan (W = F × s × cos 90° = 0) atau jika benda tidak berpindah." },
+      { question: "2. Seorang siswa mendorong tembok dengan gaya 200 N selama 5 menit, namun tembok tidak bergeser. Besar usahanya adalah...", options: ["0 Joule", "200 Joule", "1.000 Joule", "60.000 Joule"], correct: 0, explanation: "Karena perpindahan benda s = 0 meter, maka W = F × s = 200 N × 0 m = 0 Joule." },
+      { question: "3. Sebuah balok ditarik dengan gaya 50 N sehingga berpindah sejauh 4 meter. Besar usaha yang dilakukan adalah...", options: ["12,5 Joule", "46 Joule", "54 Joule", "200 Joule"], correct: 3, explanation: "W = F × s = 50 N × 4 m = 200 Joule." },
+      { question: "4. Benda bermassa 2 kg berada pada ketinggian 5 meter. Jika g = 10 m/s², energi potensial gravitasinya adalah...", options: ["10 Joule", "25 Joule", "100 Joule", "200 Joule"], correct: 2, explanation: "Ep = m × g × h = 2 kg × 10 m/s² × 5 m = 100 Joule." },
+      { question: "5. Mobil bermassa 1.000 kg bergerak dengan kecepatan 10 m/s. Energi kinetiknya adalah...", options: ["5.000 Joule", "50.000 Joule", "100.000 Joule", "500.000 Joule"], correct: 1, explanation: "Ek = 1/2 × m × v² = 0.5 × 1000 kg × (10 m/s)² = 50.000 Joule." },
+      { question: "6. Energi yang dimiliki oleh benda karena kedudukannya atau posisinya disebut...", options: ["Energi kinetik", "Energi potensial", "Energi mekanik", "Energi kalor"], correct: 1, explanation: "Energi potensial adalah energi yang tersimpan pada benda karena posisi/ketinggiannya." },
+      { question: "7. Kelapa bermassa 2 kg jatuh dari pohon. Saat di posisi v = 10 m/s, energi kinetiknya sebesar...", options: ["20 Joule", "40 Joule", "100 Joule", "200 Joule"], correct: 2, explanation: "Ek = 1/2 × m × v² = 0.5 × 2 kg × (10 m/s)² = 100 Joule." },
+      { question: "8. Pernyataan yang benar mengenai Hukum Kekekalan Energi Mekanik adalah...", options: ["Energi mekanik dapat diciptakan", "Energi mekanik dapat dimusnahkan", "Jumlah Ep dan Ek selalu konstan pada sistem terisolasi", "Energi potensial selalu sama dengan energi kinetik"], correct: 2, explanation: "Hukum Kekekalan Energi Mekanik menyatakan Em = Ep + Ek bernilai tetap pada sistem yang terisolasi." },
+      { question: "9. Alat yang digunakan untuk memudahkan pekerjaan manusia tanpa mengurangi usaha disebut...", options: ["Mesin kalor", "Pesawat sederhana", "Generator", "Transmisi gaya"], correct: 1, explanation: "Pesawat sederhana membantu mempermudah usaha dengan mengubah arah gaya atau memperkecil gaya kuasa." },
+      { question: "10. Berikut ini yang BUKAN merupakan kelompok pesawat sederhana adalah...", options: ["Tuas", "Bidang miring", "Katrol", "Motor listrik"], correct: 3, explanation: "Motor listrik adalah mesin kompleks yang mengubah energi listrik menjadi energi gerak." },
+      { question: "11. Perbandingan antara beban (w) dengan gaya kuasa (F) pada pesawat sederhana disebut...", options: ["Efisiensi", "Keuntungan mekanis", "Daya", "Usaha total"], correct: 1, explanation: "Keuntungan Mekanis (KM) didefinisikan sebagai rasio beban terhadap gaya kuasa (w/F)." },
+      { question: "12. Pada tuas jenis pertama, posisi titik tumpu berada di...", options: ["Antara titik beban dan titik kuasa", "Antara beban dan gaya", "Salah satu ujung tuas dekat gaya", "Luar sistem papan"], correct: 0, explanation: "Tuas jenis pertama memiliki susunan: Beban - Titik Tumpu - Kuasa." },
+      { question: "13. Alat yang memanfaatkan prinsip tuas jenis pertama adalah...", options: ["Gunting dan tang", "Gerobak roda satu dan pembuka botol", "Pinset dan sekop", "Sapu dan pemotong kertas"], correct: 0, explanation: "Gunting dan tang memiliki titik tumpu di tengah, di antara titik beban dan gaya kuasa." },
+      { question: "14. Pembuka botol dan gerobak dorong roda satu merupakan contoh penerapan...", options: ["Tuas jenis pertama", "Tuas jenis kedua", "Tuas jenis ketiga", "Bidang miring"], correct: 1, explanation: "Tuas jenis kedua memiliki titik beban yang berada di tengah antara titik tumpu dan kuasa." },
+      { question: "15. Saat menyapu lantai, siku bertindak sebagai titik tumpu, tangan atas sebagai kuasa, dan sapu bawah sebagai beban. Ini contoh tuas jenis...", options: ["Pertama", "Kedua", "Ketiga", "Keempat"], correct: 2, explanation: "Tuas jenis ketiga memiliki gaya kuasa yang bekerja di tengah antara titik tumpu dan beban." },
+      { question: "16. Sebuah tuas memiliki lb = 0,5 m dan lk = 2 m. Keuntungan mekanis tuas tersebut adalah...", options: ["0,25", "1,5", "2,5", "4"], correct: 3, explanation: "KM = lk / lb = 2 m / 0,5 m = 4." },
+      { question: "17. Beban 600 N diangkat dengan tuas (lk = 3 m, lb = 1 m). Gaya kuasa minimumnya adalah...", options: ["100 N", "200 N", "300 N", "1.800 N"], correct: 1, explanation: "F = (w × lb) / lk = (600 × 1) / 3 = 200 N." },
+      { question: "18. Jalan di daerah pegunungan dibuat berkelok-kelok bertujuan untuk...", options: ["Memperpendek jarak tempuh", "Mengurangi gaya kuasa yang diperlukan kendaraan", "Menambah kecepatan kendaraan", "Menghemat bahan bakar"], correct: 1, explanation: "Bidang miring yang makin landai (panjang s bertambah) akan memperkecil gaya kuasa yang dibutuhkan." },
+      { question: "19. Berikut ini yang BUKAN contoh penerapan bidang miring adalah...", options: ["Papan miring pengangkut drum", "Pisau dan kapak", "Sekrup", "Katrol timba air"], correct: 3, explanation: "Katrol timba air memanfaatkan prinsip katrol tetap, bukan bidang miring." },
+      { question: "20. Peti beratnya 1.000 N dinaikkan ke truk setinggi 1,5 m via bidang miring sepanjang 3 m. Gaya kuasanya adalah...", options: ["300 N", "500 N", "750 N", "2.000 N"], correct: 1, explanation: "F = (w × h) / s = (1000 N × 1,5 m) / 3 m = 500 N." },
+      { question: "21. Keuntungan mekanis dari bidang miring pada soal nomor 20 adalah...", options: ["0,5", "2", "3", "4,5"], correct: 1, explanation: "KM = s / h = 3 m / 1,5 m = 2." },
+      { question: "22. Katrol yang posisinya tidak berpindah saat digunakan diartikan sebagai...", options: ["Katrol bebas", "Katrol tetap", "Katrol majemuk", "Blok katrol"], correct: 1, explanation: "Katrol tetap terpasang pada poros yang diam sehingga posisinya tidak bergerak saat menarik beban." },
+      { question: "23. Keuntungan mekanis pada katrol tetap tunggal adalah...", options: ["1", "2", "3", "Tergantung panjang tali"], correct: 0, explanation: "Katrol tetap memiliki KM = 1, hanya berfungsi mengubah arah gaya." },
+      { question: "24. Benda 400 N diangkat dengan katrol bebas tunggal. Gaya kuasa yang diperlukan adalah...", options: ["100 N", "200 N", "400 N", "800 N"], correct: 1, explanation: "Katrol bebas memiliki KM = 2, sehingga F = w / 2 = 400 N / 2 = 200 N." },
+      { question: "25. Katrol majemuk terdiri dari 4 tali yang menopang beban. Keuntungan mekanisnya adalah...", options: ["1", "2", "4", "8"], correct: 2, explanation: "Keuntungan mekanis katrol majemuk sama dengan jumlah tali yang menopang beban (KM = 4)." },
+      { question: "26. Keuntungan utama menggunakan katrol tetap pada sumur timba adalah...", options: ["Melipatgandakan gaya kuasa", "Mengubah arah gaya menjadi searah gravitasi", "Mengurangi berat air", "Mempercepat waktu penarikan"], correct: 1, explanation: "Katrol tetap mempermudah pekerjaan dengan mengubah arah gaya dari menarik ke atas menjadi menarik ke bawah." },
+      { question: "27. Daya adalah besarnya usaha tiap satuan waktu. Rumus daya (P) yang benar adalah...", options: ["P = W × t", "P = W / t", "P = F / s", "P = m × g × h"], correct: 1, explanation: "Daya (P) = Usaha (W) / Waktu (t)." },
+      { question: "28. Usaha 600 Joule dilakukan dalam waktu 12 detik. Daya yang dihasilkan adalah...", options: ["50 Watt", "72 Watt", "500 Watt", "7.200 Watt"], correct: 0, explanation: "P = W / t = 600 J / 12 s = 50 Watt." },
+      { question: "29. Prinsip kerja engsel pintu rumah memanfaatkan jenis pesawat sederhana...", options: ["Katrol bebas", "Bidang miring", "Tuas", "Roda berporos"], correct: 2, explanation: "Engsel pintu bekerja sebagai titik tumpu, badan pintu sebagai beban, dan dorongan sebagai gaya (prinsip Tuas)." },
+      { question: "30. Roda bergerigi (gir) pada sepeda merupakan contoh penerapan...", options: ["Bidang miring", "Roda berporos", "Tuas jenis ketiga", "Katrol majemuk"], correct: 1, explanation: "Roda bergerigi/gir sepeda memanfaatkan prinsip Roda Berporos untuk mengalihkan gaya putar." }
+    ];
+
+    let currentQuestionIndex = 0;
+    let quizScore = 0;
+    let answered = false;
+
+    function loadQuestion() {
+      answered = false;
+      const currentQ = quizData[currentQuestionIndex];
+      
+      document.getElementById('q-number').innerText = `Soal ${currentQuestionIndex + 1} dari ${quizData.length}`;
+      document.getElementById('current-score').innerText = quizScore;
+      document.getElementById('quiz-progress').style.width = `${((currentQuestionIndex) / quizData.length) * 100}%`;
+      document.getElementById('question-text').innerText = currentQ.question;
+      
+      document.getElementById('explanation-box').style.display = 'none';
+      document.getElementById('btn-next').style.display = 'none';
+
+      const optionsContainer = document.getElementById('options-container');
+      optionsContainer.innerHTML = '';
+
+      currentQ.options.forEach((opt, idx) => {
+        const btn = document.createElement('button');
+        btn.className = 'option-btn';
+        btn.innerHTML = `<span>${opt}</span>`;
+        btn.onclick = () => checkAnswer(idx, btn);
+        optionsContainer.appendChild(btn);
+      });
+    }
+
+    function checkAnswer(selectedIdx, selectedBtn) {
+      if (answered) return;
+      answered = true;
+
+      const currentQ = quizData[currentQuestionIndex];
+      const allButtons = document.querySelectorAll('.option-btn');
+
+      if (selectedIdx === currentQ.correct) {
+        selectedBtn.classList.add('correct');
+        selectedBtn.innerHTML += ' <span>✅</span>';
+        quizScore += 10;
+        document.getElementById('current-score').innerText = quizScore;
+      } else {
+        selectedBtn.classList.add('wrong');
+        selectedBtn.innerHTML += ' <span>❌</span>';
+        allButtons[currentQ.correct].classList.add('correct');
+        allButtons[currentQ.correct].innerHTML += ' <span>✅</span>';
+      }
+
+      document.getElementById('explanation-text').innerText = currentQ.explanation;
+      document.getElementById('explanation-box').style.display = 'block';
+
+      if (currentQuestionIndex < quizData.length - 1) {
+        document.getElementById('btn-next').innerText = 'Soal Berikutnya →';
+      } else {
+        document.getElementById('btn-next').innerText = 'Lihat Hasil Akhir 🎉';
+      }
+      document.getElementById('btn-next').style.display = 'inline-flex';
+    }
+
+    function nextQuestion() {
+      currentQuestionIndex++;
+      if (currentQuestionIndex < quizData.length) {
+        loadQuestion();
+      } else {
+        showResults();
+      }
+    }
+
+    function showResults() {
+      document.getElementById('quiz-screen').style.display = 'none';
+      document.getElementById('result-screen').style.display = 'block';
+      const maxScore = quizData.length * 10;
+      const accuracy = Math.round((quizScore / maxScore) * 100);
+      document.getElementById('final-score').innerText = `${quizScore} / ${maxScore}`;
+      document.getElementById('final-accuracy').innerText = `Tingkat Akurasi Jawaban: ${accuracy}%`;
+    }
+
+    function restartGame() {
+      currentQuestionIndex = 0;
+      quizScore = 0;
+      document.getElementById('result-screen').style.display = 'none';
+      document.getElementById('quiz-screen').style.display = 'block';
+      loadQuestion();
+    }
+
+    // Event Listeners Input
+    document.querySelectorAll('input[type="range"]').forEach(input => {
+      input.addEventListener('input', () => {
+        // Real-time update canvas
+      });
+    });
+
+    // Inisialisasi awal
+    switchView('dashboard');
+  </script>
+</body>
+</html>
